@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
+import header_db from '../../json/header_db.json'
 
 interface IGitHubUser {
   login: string
@@ -43,16 +44,39 @@ const Jogos: NextPage = () => {
 
   const { Slug } = query
 
+  const teste = useRef(null)
+
+  console.log((teste.current.innerHTML = ''))
+
   useEffect(() => {
-    const getJogo = async () => {
-      const response = await fetch(`https://api.github.com/users/${Slug}`)
+    // const getJogo = async () => {
+    //   const response = await fetch(`https://api.github.com/users/${Slug}`)
+    //   const data: IGitHubUser = await response.json()
+    //   setUser(data)
+    // }
+    // if (Slug) {
+    //   getJogo()
+    // }
+
+    const getUser = async () => {
+      const response = await fetch(
+        `http://localhost:3000/api/users/create-user`,
+        {
+          body: JSON.stringify({
+            login: 'teste',
+            id: 1,
+            node_id: 'teste',
+          }),
+          method: 'POST',
+        }
+      )
       const data: IGitHubUser = await response.json()
-      setUser(data)
+      //   setUser(data)
+      console.log(data)
     }
-    if (Slug) {
-      getJogo()
-    }
-  }, [Slug])
+
+    getUser()
+  }, [])
 
   return (
     <div onClick={() => back()}>
@@ -61,6 +85,7 @@ const Jogos: NextPage = () => {
       <img src={user?.avatar_url} alt={user?.login} />
 
       <h1>{user?.bio}</h1>
+      <h1 ref={teste}>{header_db.title}</h1>
     </div>
   )
 }
